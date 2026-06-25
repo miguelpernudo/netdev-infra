@@ -1,0 +1,44 @@
+name: Test install.sh
+
+on: [push, pull_request]
+
+jobs:
+  shellcheck:
+    # Alpine container to match the target environment.
+    runs-on: ubuntu-latest
+    container: alpine:latest
+    steps:
+      - name: Install git and shellcheck
+        run: |
+          apk update
+          apk add git shellcheck
+
+      - uses: actions/checkout@v4
+
+      - name: Lint installation script
+        run: shellcheck install.sh
+
+      - name: Lint health scripts
+        run: shellcheck health/*.sh
+
+      - name: Check POSIX syntax
+        run: sh -n install.sh
+
+      - name: Check POSIX syntax (health)
+        run: sh -n health/*.sh
+
+  configs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install nftables and hostapd
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq nftables hostapd
+      - name: Validate nftables rules.
+        run: sudo nft -c -f etc/nftables.nft
+      - name: Validate hostapd config syntax.
+        run: |
+          export WPA_PASSPHRASE=dummy_test_pass
+          envsubst '${WPA_PASSPHRASE}' < etc/hostapd/hostapd.conf > /tmp/hostapd.test.conf
+          sudo hostapd -t /tmp/hostapd.test.conf

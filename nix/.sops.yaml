@@ -1,0 +1,15 @@
+keys:
+  - &anatta      age1v7530pc99myksrt0x6tm4kq8xzpfydxg5qltynecyeqknx7kfv3sm4n9nw
+  - &strata      age17nlj7y3v0dfprpntenscusk5qxvjyv3cjg6n3delyqv7dmx29e4sywkwcj
+  - &anatta-host age18m7usm886vp56ds3mtnjqkktht282sfc2s8teg88fay4a6sry55qhez2rf
+
+creation_rules:
+  - path_regex: secrets/common\.yaml$
+    key_groups:
+      - age: [*anatta, *strata]
+  - path_regex: secrets/strata\.yaml$
+    key_groups:
+      - age: [*anatta, *strata]
+  - path_regex: secrets/anatta\.yaml$
+    key_groups:
+      - age: [*anatta, *anatta-host]

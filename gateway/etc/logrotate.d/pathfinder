@@ -1,0 +1,9 @@
+/var/log/pathfinder.log {
+    daily
+    rotate 30
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 640 root root
+}
