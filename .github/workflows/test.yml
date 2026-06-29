@@ -1,44 +1,59 @@
-name: Test install.sh
+# Valida configuraciones del homelab en cada push/pull request.
+# - gateway: scripts shell + nftables + hostapd
+# - nix: evalua el flake (sintaxis y opciones de modulos)
+#
+# Cualquier persona con lo basico de GitHub Actions deberia
+# entender este archivo. Hay dos "jobs" que corren en paralelo.
+
+name: CI
 
 on: [push, pull_request]
 
 jobs:
-  shellcheck:
-    # Alpine container to match the target environment.
-    runs-on: ubuntu-latest
-    container: alpine:latest
-    steps:
-      - name: Install git and shellcheck
-        run: |
-          apk update
-          apk add git shellcheck
-
-      - uses: actions/checkout@v4
-
-      - name: Lint installation script
-        run: shellcheck install.sh
-
-      - name: Lint health scripts
-        run: shellcheck health/*.sh
-
-      - name: Check POSIX syntax
-        run: sh -n install.sh
-
-      - name: Check POSIX syntax (health)
-        run: sh -n health/*.sh
-
-  configs:
+  gateway:
+    name: Gateway (Alpine)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install nftables and hostapd
+
+      - name: Instalar shellcheck
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+
+      - name: Shellcheck scripts
+        run: shellcheck gateway/install.sh gateway/health/*.sh gateway/etc/init.d/*
+
+      - name: Verificar sintaxis POSIX
+        run: sh -n gateway/install.sh gateway/health/*.sh
+
+      - name: Validar nftables
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq nftables hostapd
-      - name: Validate nftables rules.
-        run: sudo nft -c -f etc/nftables.nft
-      - name: Validate hostapd config syntax.
+          sudo apt-get install -y -qq nftables
+          sudo nft -c -f gateway/etc/nftables.nft
+
+      - name: Validar hostapd
         run: |
-          export WPA_PASSPHRASE=dummy_test_pass
-          envsubst '${WPA_PASSPHRASE}' < etc/hostapd/hostapd.conf > /tmp/hostapd.test.conf
+          sudo apt-get install -y -qq hostapd gettext
+          WPA_PASSPHRASE=dummy_test_pass \
+            envsubst '${WPA_PASSPHRASE}' < gateway/etc/hostapd/hostapd.conf > /tmp/hostapd.test.conf
           sudo hostapd -t /tmp/hostapd.test.conf
+
+  nix:
+    name: NixOS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # cachix/install-nix-action instala Nix en el runner.
+      # Si cambia la version de nixpkgs del flake, actualizar
+      # el nix_path para que coincida.
+      - name: Instalar Nix
+        uses: cachix/install-nix-action@v27
+        with:
+          nix_path: nixpkgs=channel:nixos-26.05
+
+      # Evalua el flake sin construir nada. Detecta errores de
+      # sintaxis, opciones de modulos invalidas, referencias
+      # rotas, etc.
+      - name: Evaluar flake
+        run: nix flake check
+        working-directory: nix
