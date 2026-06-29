@@ -1,9 +1,9 @@
-# Usuario genérico aislado
+# Isolated generic guest user.
 
 { config, pkgs, ... }:
 
 {
-  users.users.invitado = {
+  users.users.guest = {
     isNormalUser = true;
     description = "Invitado";
     password = "221021";

@@ -40,8 +40,8 @@
       }
       {
         job_name = "blackbox";
-        # Blackbox recibe "/probe?target=URL" en vez de scrape directo.
-        # Los relabels traducen cada target URL a ese formato.
+        # Blackbox receives "/probe?target=URL" instead of a direct scrape.
+        # Relabels translate each target URL into that format.
         metrics_path = "/probe";
         params.module = [ "http_2xx" "icmp" ];
         static_configs = [{
@@ -53,11 +53,11 @@
           ];
         }];
         relabel_configs = [
-          # Copia la URL (eg "http://localhost:30800") al parametro target
+          # Copy the URL to the target parameter
           { source_labels = [ "__address__" ]; target_label = "__param_target"; }
-          # Usa esa misma URL como label para identificar la metrica
+          # Use the same URL as the instance label
           { source_labels = [ "__param_target" ]; target_label = "instance"; }
-          # Cambia el destino: en vez de scrapear la URL, scrapea blackbox
+          # Redirect the scrape to blackbox instead of the actual target
           { target_label = "__address__"; replacement = "127.0.0.1:9115"; }
         ];
       }

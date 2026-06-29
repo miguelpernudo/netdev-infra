@@ -13,21 +13,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Instalar shellcheck
+      - name: Install shellcheck
         run: sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
 
       - name: Shellcheck scripts
-        run: shellcheck gateway/install.sh gateway/health/*.sh gateway/etc/init.d/*
+        run: |
+          touch gateway/secrets.env
+          shellcheck -x gateway/install.sh gateway/health/*.sh gateway/etc/init.d/*
 
-      - name: Verificar sintaxis POSIX
+      - name: Verify POSIX syntax
         run: sh -n gateway/install.sh gateway/health/*.sh
 
-      - name: Validar nftables
+      - name: Validate nftables
         run: |
           sudo apt-get install -y -qq nftables
           sudo nft -c -f gateway/etc/nftables.nft
 
-      - name: Validar hostapd
+      - name: Validate hostapd
         run: |
           sudo apt-get install -y -qq hostapd gettext
           WPA_PASSPHRASE=dummy_test_pass \

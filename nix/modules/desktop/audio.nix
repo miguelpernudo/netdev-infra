@@ -8,6 +8,6 @@
           alsa.enable = true;
           alsa.support32Bit = true;
           pulse.enable = true;
-          #jack.enable = true; # no sé si alguna vez me hará falta
+          # jack.enable = true; # keep disabled unless needed
   	};
 }

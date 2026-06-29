@@ -6,7 +6,6 @@
       settings = {
         logo = {
           source  = "nixos";
-          # source  = "/home/miguel/Imágenes/ascii/tibu3.txt";
           padding = { top = 1; right = 5; left = 1; };
         };
         display = {
@@ -20,7 +19,7 @@
           "title"
           { type = "custom"; format = "╭───────────────────────────────────────────────────────╮"; }
           
-          # SISTEMA
+          # SYSTEM
           { type = "os";       key = " ";  keyColor = "blue"; }
           { type = "kernel";   key = " ";  keyColor = "cyan"; } 
           { type = "uptime";   key = "󰔚 ";  keyColor = "blue"; } 
@@ -29,7 +28,7 @@
           
           { type = "custom"; format = "├───────────────────────────────────────────────────────┤"; keyColor = "cyan"; }
           
-          # INTERFAZ
+          # UI
           { type = "de";       key = " ";  keyColor = "blue"; }
           { type = "font";    key = "󰛖 ";  keyColor = "cyan"; }
           { type = "terminal"; key = " ";  keyColor = "blue"; }
