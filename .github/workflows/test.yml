@@ -1,9 +1,6 @@
-# Valida configuraciones del homelab en cada push/pull request.
-# - gateway: scripts shell + nftables + hostapd
-# - nix: evalua el flake (sintaxis y opciones de modulos)
-#
-# Cualquier persona con lo basico de GitHub Actions deberia
-# entender este archivo. Hay dos "jobs" que corren en paralelo.
+# Validates homelab configurations in every push/pull request.
+# - gateway: shell scripts + nftables + hostapd
+# - nix: evaluates the flake (syntax and module options)
 
 name: CI
 
@@ -20,9 +17,7 @@ jobs:
         run: sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
 
       - name: Shellcheck scripts
-        run: |
-          touch gateway/secrets.env
-          shellcheck -x gateway/install.sh gateway/health/*.sh gateway/etc/init.d/*
+        run: shellcheck gateway/install.sh gateway/health/*.sh gateway/etc/init.d/*
 
       - name: Verificar sintaxis POSIX
         run: sh -n gateway/install.sh gateway/health/*.sh
@@ -45,17 +40,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # cachix/install-nix-action instala Nix en el runner.
-      # Si cambia la version de nixpkgs del flake, actualizar
-      # el nix_path para que coincida.
-      - name: Instalar Nix
+      # cachix/install-nix-action installs Nix on the runner.
+      # If the flake's nixpkgs version changes, update
+      # the nix_path to match.
+      - name: Install nix
         uses: cachix/install-nix-action@v27
         with:
           nix_path: nixpkgs=channel:nixos-26.05
 
-      # Evalua el flake sin construir nada. Detecta errores de
-      # sintaxis, opciones de modulos invalidas, referencias
-      # rotas, etc.
-      - name: Evaluar flake
+      # Evaluates the Flake file without building anything. Detects
+      # syntax errors, invalid module options, broken
+      # references, etc.
+      - name: Evaluate flake
         run: nix flake check
         working-directory: nix

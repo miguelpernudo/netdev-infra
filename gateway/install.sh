@@ -31,6 +31,7 @@ echo "[3/7] Setting up configuration files..."
 mkdir -p /etc/hostapd /etc/dnscrypt-proxy /etc/network
 
 [ -f "$REPO_DIR/secrets.env" ] || { echo "  [ERROR] Missing secrets.env. Copy secrets.env.example and edit it."; exit 1; }
+# shellcheck source=/dev/null
 . "$REPO_DIR/secrets.env"
 : "${WPA_PASSPHRASE:?}" "${DEVICE_IP:?}" "${GATEWAY:?}"
 export WPA_PASSPHRASE DEVICE_IP GATEWAY

@@ -5,6 +5,7 @@ set -u
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 set -a
+# shellcheck source=./config.sh
 . "$SCRIPT_DIR/config.sh"
 set +a
 

@@ -1,0 +1,7 @@
+title = "netdev-infra gitleaks config"
+
+# DNSCrypt-proxy is public key and not a secret (false positive).
+[[allowlist]]
+  description = "dnscrypt-proxy public key"
+  path = "gateway/etc/dnscrypt-proxy/dnscrypt-proxy.toml"
+  regexes = ['''minisign_key\s*=\s*'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3''']
