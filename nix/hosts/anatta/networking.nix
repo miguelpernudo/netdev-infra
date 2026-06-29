@@ -2,7 +2,8 @@
 
 {
   imports = [
-    ../../modules/network/firewall-desktop.nix
+    ./firewall.nix
+    
     ../../modules/network/dns.nix
     # ../../modules/network/cloudflare-warp.nix
   ];
@@ -14,35 +15,35 @@
   networking.useNetworkd = lib.mkDefault false;
 
   ### Wireguard (network manager).
-  networking.networkmanager.ensureProfiles = {
-    environmentFiles = [ config.sops.templates."wg-env".path ];
-    profiles = {
-      Strata = {
-          connection = {
-            id = "Strata";
-            type = "wireguard";
-            interface-name = "strata";
-            autoconnect = false;
-          };
-          wireguard = {
-            private-key = "$WG_PRIVATE_KEY"; 
-          };
-          
-          "wireguard-peer.ttXAvtimbEJxuEa92SJcNHIOt+KEUG92F0SaXMITHX8=" = {
-            endpoint = "46.136.62.166:51820";
-            allowed-ips = "0.0.0.0/0;";
-            persistent-keepalive = 25;
-          };
-          ipv4 = {
-            method   = "manual";
-            address1 = "10.100.0.2/24";
-          };
-          ipv6 = {
-            method = "disabled";
-          };
-        };
-      };
-    };
+  #networking.networkmanager.ensureProfiles = {
+  #  environmentFiles = [ config.sops.templates."wg-env".path ];
+  #  profiles = {
+  #    Strata = {
+  #        connection = {
+  #          id = "Strata";
+  #          type = "wireguard";
+  #          interface-name = "strata";
+  #          autoconnect = false;
+  #        };
+  #        wireguard = {
+  #          private-key = "$WG_PRIVATE_KEY"; 
+  #        };
+  #        
+  #        "wireguard-peer.ttXAvtimbEJxuEa92SJcNHIOt+KEUG92F0SaXMITHX8=" = {
+  #          endpoint = "46.136.62.166:51820";
+  #          allowed-ips = "0.0.0.0/0;";
+  #          persistent-keepalive = 25;
+  #        };
+  #        ipv4 = {
+  #          method   = "manual";
+  #          address1 = "10.100.0.2/24";
+  #        };
+  #        ipv6 = {
+  #          method = "disabled";
+  #        };
+  #      };
+  #    };
+  #  };
     
   ### Wireguard (interface).  
   #networking.wireguard.interfaces = {
@@ -63,8 +64,8 @@
 
 
   ### Sops for the wireguard private key.
-  sops.secrets.wg_private_key = {};
-  sops.templates."wg-env".content = ''
-      WG_PRIVATE_KEY=${config.sops.placeholder.wg_private_key}
-    '';
+  #sops.secrets.wg_private_key = {};
+  #sops.templates."wg-env".content = ''
+  #    WG_PRIVATE_KEY=${config.sops.placeholder.wg_private_key}
+  #  '';
 }

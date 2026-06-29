@@ -19,7 +19,6 @@
 
     ### Services
     ../../modules/services/ssh.nix
-    ../../modules/services/wireguard.nix
     ../../modules/services/observability.nix
 
     ### Profiles
