@@ -7,7 +7,7 @@
     privateKeyFile = config.sops.secrets.wg_private_key.path;
 
     peers = [
-      # PC (anatta)
+      # PC (orca)
       {
         publicKey  = "efVku/ZYcZimksoNCkMTcoZk4+XXhvo+rmwWZ9fGuhk=";
         allowedIPs = [ "10.100.0.2/32" ];
@@ -31,7 +31,7 @@
     # '';
   };
 
-  # Needed but already defined in ../../hosts/strata/boot.nix
+  # Needed but already defined in ../../hosts/angler/boot.nix
   # boot.kernel.sysctl."net.ipv4.ip_forward" = lib.mkForce 1;
 
   sops.secrets.wg_private_key = {};

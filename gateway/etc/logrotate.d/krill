@@ -1,4 +1,4 @@
-/var/log/pathfinder.log {
+/var/log/krill.log {
     daily
     rotate 30
     compress

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # This script configures the services so that 
-# Pathfinder acts as an access point.
+# Krill acts as an access point.
 # Alpine Linux is expected (openrc and apk).
 
 set -e
@@ -41,7 +41,7 @@ cp "$REPO_DIR/etc/dnsmasq.conf" /etc/dnsmasq.conf
 cp "$REPO_DIR/etc/dnscrypt-proxy/dnscrypt-proxy.toml" /etc/dnscrypt-proxy/dnscrypt-proxy.toml
 cp "$REPO_DIR/etc/nftables.nft"               /etc/nftables.nft
 cp "$REPO_DIR/etc/logrotate.d/dnscrypt-proxy" /etc/logrotate.d/dnscrypt-proxy
-cp "$REPO_DIR/etc/logrotate.d/pathfinder"     /etc/logrotate.d/pathfinder
+cp "$REPO_DIR/etc/logrotate.d/krill"         /etc/logrotate.d/krill
 cp "$REPO_DIR/etc/tc.qos"                     /etc/tc.qos
 chmod +x /etc/tc.qos
 
@@ -77,11 +77,11 @@ for svc in hostapd dnsmasq dnscrypt-proxy nftables crond; do
     rc-service "$svc" start > /dev/null 2>&1 || true
 done
 
-# Pathfinder-specific services
-cp "$REPO_DIR/etc/init.d/pathfinder-tc" /etc/init.d/pathfinder-tc
-chmod +x /etc/init.d/pathfinder-tc
-rc-update add pathfinder-tc default > /dev/null 2>&1 || true
-rc-service pathfinder-tc start > /dev/null 2>&1 || true
+# Krill-specific services
+cp "$REPO_DIR/etc/init.d/krill-tc" /etc/init.d/krill-tc
+chmod +x /etc/init.d/krill-tc
+rc-update add krill-tc default > /dev/null 2>&1 || true
+rc-service krill-tc start > /dev/null 2>&1 || true
 
 # Give dnscrypt-proxy time to load the blocklist before testing it.
 sleep 2
@@ -93,7 +93,7 @@ else
 fi
 
 # Configure OpenRC to restart services if they crash.
-for svc in hostapd dnsmasq dnscrypt-proxy nftables pathfinder-tc; do
+for svc in hostapd dnsmasq dnscrypt-proxy nftables krill-tc; do
     touch /etc/conf.d/"$svc"
     if ! grep -q "rc_crash_action" /etc/conf.d/"$svc" 2>/dev/null; then
         echo 'rc_crash_action="restart"' >> /etc/conf.d/"$svc"
@@ -101,15 +101,15 @@ for svc in hostapd dnsmasq dnscrypt-proxy nftables pathfinder-tc; do
 done
 
 echo "[7/7] Installing health checks..."
-mkdir -p /usr/local/lib/pathfinder
-cp -r "$REPO_DIR/health"/* /usr/local/lib/pathfinder/
-ln -sf /usr/local/lib/pathfinder/health.sh /usr/local/bin/pathfinder-health
+mkdir -p /usr/local/lib/krill
+cp -r "$REPO_DIR/health"/* /usr/local/lib/krill/
+ln -sf /usr/local/lib/krill/health.sh /usr/local/bin/krill-health
 
 # Run health check every 5 minutes without overwriting existing crontab.
-crontab -l 2>/dev/null | { cat; echo "*/5 * * * * /usr/local/bin/pathfinder-health"; } | crontab - 2>/dev/null || true
+crontab -l 2>/dev/null | { cat; echo "*/5 * * * * /usr/local/bin/krill-health"; } | crontab - 2>/dev/null || true
 
 trap - EXIT
 
 echo ""
-echo "[SUCCESS] Pathfinder setup complete!"
+echo "[SUCCESS] Krill setup complete!"
 echo "          Run 'iw dev wlan0 info' to verify status."

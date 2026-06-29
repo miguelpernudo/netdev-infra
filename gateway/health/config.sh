@@ -9,5 +9,5 @@ NET_TARGET="8.8.8.8"
 
 FAILURE_LIMIT=3
 
-STATE_DIR="/var/lib/pathfinder"
-LOG="/var/log/pathfinder.log"
+STATE_DIR="/var/lib/krill"
+LOG="/var/log/krill.log"

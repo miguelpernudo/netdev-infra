@@ -17,4 +17,4 @@ for svc in dnsmasq; do
 done
 
 log "Alerting via wall message"
-wall "Pathfinder: Disk critically full, services may have been stopped"
+wall "Krill: Disk critically full, services may have been stopped"

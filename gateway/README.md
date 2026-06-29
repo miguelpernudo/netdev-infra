@@ -12,7 +12,7 @@ This script turns my old netbook into a basic, secure gateway.
 
 ```mermaid
 graph LR
-    subgraph Pathfinder
+    subgraph Krill
         A[nftables] <--> B[dnsmasq\ndhcp]
         B <--> C[hostapd]
         C <--> D[wlan0\n192.168.2.1]
@@ -34,7 +34,7 @@ graph LR
 
 ## Design
 
-Pathfinder was built under strict hardware constraints. Every choice balances security with a minimal resource usage.
+Krill was built under strict hardware constraints. Every choice balances security with a minimal resource usage.
 
 ### OS Selection: Why Alpine?
 *   **vs. BSD (pfSense):** BSD lacks mature wireless driver support for commodity laptop Wi-Fi cards.
@@ -48,7 +48,7 @@ Alpine offers a standard and lightweight Linux environment with unabstracted con
 *   **DHCP (dnsmasq vs. Kea DHCP):** Kea is the modern enterprise standard but adds overhead. 
 
 ### Why a Bash script?
-Automation tools would be overengineering, since they're typically used for multi-node deployments while Pathfinder is a single machine. The same goes for packaging an .iso for a non-reproducible machine.
+Automation tools would be overengineering, since they're typically used for multi-node deployments while Krill is a single machine. The same goes for packaging an .iso for a non-reproducible machine.
 And for that very reason, the subnet's IP address is hardcoded (192.168.2.1). It isn't designed for a deployment environment with multiple subnets.
 
 ## Installation
@@ -58,17 +58,17 @@ And for that very reason, the subnet's IP address is hardcoded (192.168.2.1). It
 
 1. **Download**
    ```
-   wget https://github.com/miguelpernudo/pathfinder/archive/refs/heads/main.tar.gz
+    wget https://github.com/miguelpernudo/netdev-infra/archive/refs/heads/main.tar.gz
    ```
    or
    ```
-   curl -L https://github.com/miguelpernudo/pathfinder/archive/refs/heads/main.tar.gz
+    curl -L https://github.com/miguelpernudo/netdev-infra/archive/refs/heads/main.tar.gz
    ```
 
 2. **Extract**
    ```
    tar -xzf main.tar.gz
-   cd pathfinder-main
+    cd netdev-infra-main
    ```
 
 3. **Configure secrets**
@@ -97,7 +97,7 @@ And for that very reason, the subnet's IP address is hardcoded (192.168.2.1). It
 │   ├── hostapd
 │   │   └── hostapd.conf
 │   ├── init.d
-│   │   └── pathfinder-tc
+│   │   └── krill-tc
 │   ├── logrotate.d
 │   │   └── dnscrypt-proxy
 │   ├── network
@@ -120,7 +120,7 @@ And for that very reason, the subnet's IP address is hardcoded (192.168.2.1). It
 
 **nftables** firewall: NAT, SSH (LAN only), DNS/DHCP on wlan0. `nft list ruleset`
 
-**Traffic control**: HTB hierarchy prioritises SSH, DNS, and web traffic, rate-limits bulk. Shaped on both `eth0` (upload) and `wlan0` (download). `rc-service pathfinder-tc status`
+**Traffic control**: HTB hierarchy prioritises SSH, DNS, and web traffic, rate-limits bulk. Shaped on both `eth0` (upload) and `wlan0` (download). `rc-service krill-tc status`
 
 > **Roadmap:** eBPF-based metrics exporter.
 
@@ -167,7 +167,7 @@ rc-service hostapd status
 rc-service dnsmasq status
 rc-service dnscrypt-proxy status
 rc-service nftables status
-rc-service pathfinder-tc status
+rc-service krill-tc status
 
 # Verify Wi-Fi interface
 iw dev wlan0 info

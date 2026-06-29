@@ -58,12 +58,12 @@
   in {
     nixosConfigurations = {
 
-      anatta = mkHost "anatta" {
+      orca = mkHost "orca" {
         hardware = [ nixos-hardware.nixosModules.lenovo-thinkpad-t14-intel-gen1 ];
         withHome = true;
       };
 
-      strata = mkHost "strata" {
+      angler = mkHost "angler" {
         withDisko = true;
       };
 

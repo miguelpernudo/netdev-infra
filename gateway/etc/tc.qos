@@ -1,5 +1,5 @@
 #!/bin/sh
-# Traffic control (QoS) for Pathfinder.
+# Traffic control (QoS) for Krill.
 # Prioritises SSH and DNS over bulk traffic.
 # eth0 (WAN) upload cap, wlan0 (LAN) download cap.
 

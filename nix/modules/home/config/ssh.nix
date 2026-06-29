@@ -5,22 +5,22 @@
     enable = true;
     enableDefaultConfig = false;
     settings = {
-      strata = {
+      angler = {
         hostname     = "192.168.0.35";
         user         = "admin";
-        identityFile = "~/.ssh/id_strata";
+        identityFile = "~/.ssh/id_angler";
       };
 
-      pathfinder = {
+      krill = {
         hostname     = "192.168.0.30";
         user         = "admin";
-        identityFile = "~/.ssh/id_pathfinder";
+        identityFile = "~/.ssh/id_krill";
       };
       
-      stratavpn = {
+      anglervpn = {
         hostname     = "10.100.0.1";
         user         = "admin";
-        identityFile = "~/.ssh/id_strata";
+        identityFile = "~/.ssh/id_angler";
       };
     };
   };
