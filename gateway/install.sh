@@ -11,6 +11,7 @@ set -e
 # shellcheck disable=SC2154
 trap 'ret=$?; [ $ret -ne 0 ] && echo "  [ERROR] Script failed with code $ret." >&2' EXIT
 
+# shellcheck disable=SC2164  # && pwd inside $() handles cd failure
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 echo "[1/7] Installing packages..."

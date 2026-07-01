@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2154  # inherited via set -a from config.sh
 
 CURRENT_DISK=$(df -h / | awk 'NR==2 {print $5}' | sed 's/%//')
 

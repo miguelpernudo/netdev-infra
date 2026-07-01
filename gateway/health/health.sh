@@ -1,12 +1,12 @@
 #!/bin/sh
-
+# shellcheck disable=SC2154  # set -a exports config.sh vars to child procs
 set -u
 
+# shellcheck disable=SC2164  # && pwd inside $() handles cd failure
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 set -a
-# shellcheck source=./config.sh
-. "$SCRIPT_DIR/config.sh"
+. "$SCRIPT_DIR/config.sh"  # shellcheck disable=SC1091  # resolved at runtime via SCRIPT_DIR
 set +a
 
 mkdir -p "$STATE_DIR"

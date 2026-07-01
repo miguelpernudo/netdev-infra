@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2154  # inherited via set -a from config.sh
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] [service-critical] $*" | tee -a "$LOG"; }
 

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# shellcheck disable=SC2034
+# shellcheck disable=SC2034  # consumed by health.sh checks and handlers
 
 DISK_LIMIT=90
 DISK_CRITICAL=97
